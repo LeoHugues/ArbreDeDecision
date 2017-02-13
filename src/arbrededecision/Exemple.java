@@ -66,6 +66,7 @@ public class Exemple {
     public void printStats() {
         for (AttributStat stat : this.stats) {
             System.out.print(stat.getName() + " : "  + "\n    valeur 0 : " + stat.getNbValue0() + "\n    valeur 1 : " + stat.getNbValue1() + "\n    valeur 2 : " + stat.getNbValue2() + "\n");
+            System.out.print(stat.getRootAntropie());
         }
     }
 

@@ -19,17 +19,22 @@ public class AttributStat {
         this.name = name;
     }
     
-    public int getNbApparition() {
+    public int getNbApparitionAttribut() {
         return nbValue0 + nbValue1 + nbValue2;
     }
     
-    public double getAntropieVal1 () {
-        float pV0 = this.nbValue0 / this.getNbApparition();
-        float pV1 = this.nbValue1 / this.getNbApparition();
-        float pV2 = this.nbValue2 / this.getNbApparition();
+    public double getRootAntropie () {
+        double pV0 = (double) this.nbValue0 / this.getNbApparitionAttribut();
+        double pV1 = (double) this.nbValue1 / this.getNbApparitionAttribut();
+        double pV2 = (double) this.nbValue2 / this.getNbApparitionAttribut();
+        
+        if (pV2 == 0) {
+            return -pV0 * this.log2(pV0) - pV1 * this.log2(pV1);
+        }
         
         return -pV0 * this.log2(pV0) - pV1 * this.log2(pV1) - pV2 * this.log2(pV2);
     }
+    
 
     public String getName() {
         return name;
@@ -63,7 +68,7 @@ public class AttributStat {
         this.nbValue2++;
     }
     
-    private double log2(float n)
+    private double log2(double n)
     {
         return (Math.log(n) / Math.log(2));
     }

@@ -97,15 +97,15 @@ public class ArbreDeDecision {
     public List<Attribut> getExemple1 () 
     {
         List<Attribut> exemples = new ArrayList<Attribut>();
-        exemples.add(new Attribut("clair", 1));
-        exemples.add(new Attribut("fonce", 1));
-        exemples.add(new Attribut("clair", 1));
-        exemples.add(new Attribut("fonce", 1));
-        exemples.add(new Attribut("clair", 0));
-        exemples.add(new Attribut("fonce", 0));
-        exemples.add(new Attribut("clair", 0));
-        exemples.add(new Attribut("fonce", 0));
-        exemples.add(new Attribut("clair", 0));
+        exemples.add(new Attribut("bleu", 1));
+        exemples.add(new Attribut("bleu", 0));
+        exemples.add(new Attribut("bleu", 1));
+        exemples.add(new Attribut("bleu", 0));
+        exemples.add(new Attribut("bleu", 1));
+        exemples.add(new Attribut("bleu", 0));
+        exemples.add(new Attribut("bleu", 1));
+        exemples.add(new Attribut("bleu", 0));
+        exemples.add(new Attribut("bleu", 1));
         
         return exemples;
     }
