@@ -5,84 +5,87 @@
  */
 package arbrededecision;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * @author lehug
  */
 public class Exemple {
-    private List<Attribut> exemples;
-    private List<AttributStat> stats;
+    private List<ExampleLineAttribut> exemples;
 
-    public Exemple(List<Attribut> exemples) {
+    public Exemple(List<ExampleLineAttribut> exemples) {
         this.exemples = exemples;
-        this.stats = new ArrayList<AttributStat>();
-        this.initAttributStats();
     }
     
-    public void initAttributStats () 
-    {        
-        boolean firstIteration = true;
-        for (Attribut exemple : this.exemples) {  
-            if (firstIteration) {
-                AttributStat stat = new AttributStat(exemple.getName());
-                switch (exemple.getValue()) {
-                    case 0 : stat.incrementNbValue0();break;
-                    case 1 : stat.incrementNbValue1();break;
-                    case 2 : stat.incrementNbValue2();break;
-                }
-                this.stats.add(stat);
-                firstIteration = false;
-            } else {
-                boolean attributNameExist = false;
-                for (AttributStat stat : this.stats) {
-                    if (stat.getName() == exemple.getName()) {
-                        switch (exemple.getValue()) {
-                            case 0 : stat.incrementNbValue0();break;
-                            case 1 : stat.incrementNbValue1();break;
-                            case 2 : stat.incrementNbValue2();break;
-                        }
-                        attributNameExist = true;
-                    }
-                }
-                
-                if (!attributNameExist) {
-                    AttributStat stat = new AttributStat(exemple.getName());
-                    switch (exemple.getValue()) {
-                        case 0 : stat.incrementNbValue0();break;
-                        case 1 : stat.incrementNbValue1();break;
-                        case 2 : stat.incrementNbValue2();break;
-                    }
-                    this.stats.add(stat);
-                }
+    public void printStats() {
+        Collections.sort(exemples);
+        for (ExampleLineAttribut line : this.exemples) {
+            if (!line.isIsReferenceLine()) {
+                System.out.print(line.getAttributName() + " : "  + "\n    pertinence : " + line.getPertinence());
+                System.out.print("\n    " + line.getNameValue0() +" : " + line.getAntropieOfValue(0));
+                System.out.print("\n    " + line.getNameValue1() +" : " + line.getAntropieOfValue(1));
+                System.out.print("\n    " + line.getNameValue2() +" : " + line.getAntropieOfValue(2) + "\n");
             }
         }
     }
     
-    public void printStats() {
-        for (AttributStat stat : this.stats) {
-            System.out.print(stat.getName() + " : "  + "\n    valeur 0 : " + stat.getNbValue0() + "\n    valeur 1 : " + stat.getNbValue1() + "\n    valeur 2 : " + stat.getNbValue2() + "\n");
-            System.out.print(stat.getRootAntropie());
+    public void getArbre() {
+        Collections.sort(exemples);
+        this.printArbreNode(0);
+    }
+    
+    public void printArbreNode(int node) {
+        ExampleLineAttribut line = this.exemples.get(node);
+        if (line.isIsReferenceLine()) {
+            this.printArbreNode(node + 1);
+        }
+        this.printSpace(node);
+        System.out.print(line.getAttributName() + " : ");
+        if (line.getNbValue() == 2) {
+            if (line.getAntropieOfValue(0) < line.getAntropieOfValue(1)) {
+                this.printSpace(node + 1);
+                System.out.print(line.getNameValue0()+" : Oui");
+                this.printSpace(node + 1);
+                System.out.print(line.getNameValue1() +" : Non");
+            } else {
+                this.printSpace(node + 1);
+                System.out.print(line.getNameValue0() +" : Non");
+                this.printSpace(node + 1);
+                System.out.print(line.getNameValue1() +" : Oui");
+            }
+        } else {
+            int minVal = line.getValueWithMinAntropie();
+            int maxVal = line.getValueWithMaxAntropie();
+            int medVal = this.getMediumValue(minVal, maxVal);
+
+            this.printSpace(node + 1);
+            System.out.print(line.getNameValue(minVal) +" : Oui");
+            
+            this.printSpace(node + 1);
+            System.out.print(line.getNameValue(medVal) +" :");
+            this.printArbreNode(node + 1);
+            
+            this.printSpace(node + 1);
+            System.out.print(line.getNameValue(maxVal) +" :");
+            this.printArbreNode(node + 2);
         }
     }
-
-    public List<Attribut> getExemples() {
-        return exemples;
+    
+    private void printSpace(int nbSpace) {
+        System.out.print("\n");
+        for (int i = 0; i < nbSpace; i++) 
+            System.out.print("    ");
     }
-
-    public void setExemples(List<Attribut> exemples) {
-        this.exemples = exemples;
-    }
-
-    public List<AttributStat> getStats() {
-        return stats;
-    }
-
-    public void setStats(List<AttributStat> stats) {
-        this.stats = stats;
+    
+    private int getMediumValue(int minVal, int maxVal) {
+        if (minVal == 0 && maxVal == 1 || maxVal == 0 && minVal == 1) {
+            return 2;
+        } else if (minVal == 0 && maxVal == 2 || maxVal == 0 && minVal == 2) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
